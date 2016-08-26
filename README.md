@@ -9,17 +9,28 @@ Cada criatura, seja ela player ou NPC, tem um turno. Em cada turno é possivel r
 * Combater
 
 ###Movimento
-Os personagens controlados, tem um range de 2 a 12 tiles que podem percorrer pelo mapa do jogo. Já os monstros e outros NPCs tem um numero fixo de movimento podendo optar andar o máximo ou menos. Não é possivel atravessar pareder, nem andar na diagonal.
+Os personagens controlados, tem que realizar um teste de movimento para saber o quanto vão poder percorrer pelo mapa do jogo. Já os monstros e outros NPCs tem um numero fixo de movimento podendo optar andar o máximo ou menos, não necessitando do teste de movimento. Não é possivel atravessar pareder, nem andar na diagonal.
 
 ###Combate
 Tanto um personagem quanto um NPC podem, em seu turno, atacar outra criatura.
 
 O combate funciona da seguinte maneira:
 
-1. O atacante tem 3/6 chance de acertar o ataque. 
-2. O defensor, sendo player tem 2/6 chance de defesa, sendo NPC tem 1/6 de chance de defesa.
+1. O atacante deve ser bem sucedido em um teste de ataque, para realizar um ataque efetivo. 
+2. O defensor, após o teste de ataque realizado, deve ser bem sucedido em um teste de defesa, para evitar os ataques efetivos.
 
 Obs.: É preciso estar adjacente para atacar e não é possivel atacar na diagonal.
+
+###Teste de Ataque
+É um teste realizado para saber a eficiencia do ataque. Independente de quem ataca, existe 50% de chance de efetividade.
+
+###Teste de Defesa
+Após realizado o teste de ataque, o alvo do ataque realiza um teste de defesa. No caso de o alvo ser um Player o teste tem 30% de chance de anular um ataque efetivo, caso contrario ele tem 10% apenas de chance.
+
+Se não hover nenhum ataque efetivo, não há necessidade do teste de defesa.
+
+###Dano
+Caso houver um ataque efetivo, e o mesmo não for anulado pelo teste de defesa, é causado dano no alvo. O dano causado subitrai a vida do alvo, até o mesmo morrer e não poder perder mais vida.
 
 ###Vida e Morte
 Tanto o Player quanto os NPCs têm uma quantidade limitada de vida, que ao zerar são mortos.
