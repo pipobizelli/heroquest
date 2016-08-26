@@ -11,6 +11,11 @@ Cada criatura, seja ela player ou NPC, tem um turno. Em cada turno é possivel r
 ###Movimento
 Os personagens controlados, tem que realizar um teste de movimento para saber o quanto vão poder percorrer pelo mapa do jogo. Já os monstros e outros NPCs tem um numero fixo de movimento podendo optar andar o máximo ou menos, não necessitando do teste de movimento. Não é possivel atravessar pareder, nem andar na diagonal.
 
+O movimento minimo é de um tile, e para tal não é necessário o teste de movimento.
+
+###Teste de Moviemtno
+É um teste realizado pelo personagem para saber, em um range de 2 a 12 quantos tiles ele podera percorrer. Não é necessario se mover a quantia total, e não é possivel atravessar paredes nem um tile ja ocupado. 
+
 ###Combate
 Tanto um personagem quanto um NPC podem, em seu turno, atacar outra criatura.
 
@@ -25,12 +30,14 @@ Obs.: É preciso estar adjacente para atacar e não é possivel atacar na diagon
 É um teste realizado para saber a eficiencia do ataque. Independente de quem ataca, existe 50% de chance de efetividade.
 
 ###Teste de Defesa
-Após realizado o teste de ataque, o alvo do ataque realiza um teste de defesa. No caso de o alvo ser um Player o teste tem 30% de chance de anular um ataque efetivo, caso contrario ele tem 10% apenas de chance.
+Após realizado o teste de ataque, o alvo do ataque realiza um teste de defesa. Assim como no teste de ataque o alvo tem 50% de chance de anular um ataque efetivo.
 
 Se não hover nenhum ataque efetivo, não há necessidade do teste de defesa.
 
 ###Dano
-Caso houver um ataque efetivo, e o mesmo não for anulado pelo teste de defesa, é causado dano no alvo. O dano causado subitrai a vida do alvo, até o mesmo morrer e não poder perder mais vida.
+Caso houver um ataque efetivo, e o mesmo não for anulado pelo teste de defesa, é causado 1 ponto de dano no alvo. O dano causado subitrai a vida do alvo, até o mesmo morrer e não poder perder mais vida.
+
+É causado somente 1 ponto por ataque efetivado.
 
 ###Vida e Morte
 Tanto o Player quanto os NPCs têm uma quantidade limitada de vida, que ao zerar são mortos.
