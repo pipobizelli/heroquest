@@ -13,7 +13,7 @@ Os personagens controlados, tem que realizar um teste de movimento para saber o 
 
 O movimento minimo é de um tile, e para tal não é necessário o teste de movimento.
 
-###Teste de Moviemtno
+###Teste de Movimento
 É um teste realizado pelo personagem para saber, em um range de 2 a 12 quantos tiles ele podera percorrer. Não é necessario se mover a quantia total, e não é possivel atravessar paredes nem um tile ja ocupado. 
 
 ###Combate
