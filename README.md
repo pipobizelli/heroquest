@@ -1,6 +1,6 @@
 # HeroQuest - v1.0.0
 
-O objetivo desse primeiro  MVC é fazer uma versão básica dos conceitos do jogo de tabuleiro HeroQuest.
+O objetivo desse primeiro  MVP é fazer uma versão básica dos conceitos do jogo de tabuleiro HeroQuest.
 
 ## Regras
 Cada criatura, seja ela player ou NPC, tem um turno. Em cada turno é possivel realizar 2 ações, entre elas:
