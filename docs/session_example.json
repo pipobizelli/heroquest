@@ -172,13 +172,167 @@
 		"goblin": {
 			"name": "Goblin",
 			"description": "Yaiik yaik, i love humans! I kill them!",
-			"movement": 3,
-			"attack_dices": 1,
+			"movement": 10,
+			"attack_dices": 2,
 			"defende_dices": 1,
 			"body_points": 1,
+			"mind_points": 1,
+			"starting_weapon": "short_sword",
+			"starting_armor": "",
+			"images": {
+				"avatar": {
+					"file_name": "avatar.jpg"
+				},
+				"sprite": {
+					"file_name": "sprite.jpg"
+				},
+				"illustration": {
+					"file_name": "illustration.jpg"
+				}
+			}
+		},
+		"orc": {
+			"name": "Orc",
+			"description": "Zailik Has Gahul, i hate humans! I eat them!",
+			"movement": 8,
+			"attack_dices": 3,
+			"defende_dices": 2,
+			"body_points": 1,
+			"mind_points": 2,
+			"starting_weapon": "large_sword",
+			"starting_armor": "",
+			"images": {
+				"avatar": {
+					"file_name": "avatar.jpg"
+				},
+				"sprite": {
+					"file_name": "sprite.jpg"
+				},
+				"illustration": {
+					"file_name": "illustration.jpg"
+				}
+			}
+		},
+		"mummy": {
+			"name": "Múmia",
+			"description": "OOoh, ooh!",
+			"movement": 4,
+			"attack_dices": 3,
+			"defende_dices": 4,
+			"body_points": 2,
 			"mind_points": 0,
 			"starting_weapon": "",
 			"starting_armor": "",
+			"images": {
+				"avatar": {
+					"file_name": "avatar.jpg"
+				},
+				"sprite": {
+					"file_name": "sprite.jpg"
+				},
+				"illustration": {
+					"file_name": "illustration.jpg"
+				}
+			}
+		},
+		"skeleton": {
+			"name": "Esqueleto",
+			"description": "Kiahaaaahahahaha!",
+			"movement": 6,
+			"attack_dices": 2,
+			"defende_dices": 2,
+			"body_points": 1,
+			"mind_points": 0,
+			"starting_weapon": "sickle",
+			"starting_armor": "",
+			"images": {
+				"avatar": {
+					"file_name": "avatar.jpg"
+				},
+				"sprite": {
+					"file_name": "sprite.jpg"
+				},
+				"illustration": {
+					"file_name": "illustration.jpg"
+				}
+			}
+		},
+		"zombie": {
+			"name": "Zumbi",
+			"description": "UOoohh!",
+			"movement": 5,
+			"attack_dices": 2,
+			"defende_dices": 3,
+			"body_points": 1,
+			"mind_points": 0,
+			"starting_weapon": "machete",
+			"starting_armor": "",
+			"images": {
+				"avatar": {
+					"file_name": "avatar.jpg"
+				},
+				"sprite": {
+					"file_name": "sprite.jpg"
+				},
+				"illustration": {
+					"file_name": "illustration.jpg"
+				}
+			}
+		},
+		"fimir": {
+			"name": "Fimir",
+			"description": "Die! Die! Piece of meat! Die!",
+			"movement": 6,
+			"attack_dices": 3,
+			"defende_dices": 3,
+			"body_points": 2,
+			"mind_points": 3,
+			"starting_weapon": "large_axe",
+			"starting_armor": "lether_armor",
+			"images": {
+				"avatar": {
+					"file_name": "avatar.jpg"
+				},
+				"sprite": {
+					"file_name": "sprite.jpg"
+				},
+				"illustration": {
+					"file_name": "illustration.jpg"
+				}
+			}
+		},
+		"caos": {
+			"name": "Guerreiro Caos",
+			"description": "...",
+			"movement": 7,
+			"attack_dices": 4,
+			"defende_dices": 4,
+			"body_points": 3,
+			"mind_points": 3,
+			"starting_weapon": "large_axe",
+			"starting_armor": "plate_armor",
+			"images": {
+				"avatar": {
+					"file_name": "avatar.jpg"
+				},
+				"sprite": {
+					"file_name": "sprite.jpg"
+				},
+				"illustration": {
+					"file_name": "illustration.jpg"
+				}
+			}
+		},
+		"gargoyle": {
+			"name": "Gárgola",
+			"description": "You will die, mortal!",
+			"movement": 6,
+			"attack_dices": 4,
+			"defende_dices": 5,
+			"body_points": 3,
+			"mind_points": 4,
+			"starting_weapon": ["large_sword", "whip"],
+			"starting_armor": "bronze_armor",
 			"images": {
 				"avatar": {
 					"file_name": "avatar.jpg"
@@ -200,9 +354,75 @@
 			"attack_dices": 3,
 			"defend_dices": 2,
 			"body_points": 8,
-			"mind_points": 0,
-			"starting_weapon": "Sword",
-			"starting_armor": "Chainmail",
+			"mind_points": 2,
+			"starting_weapon": "large_sword",
+			"starting_armor": "",
+			"images": {
+				"avatar": {
+					"file_name": "avatar.jpg"
+				},
+				"sprite": {
+					"file_name": "sprite.jpg"
+				},
+				"illustration": {
+					"file_name": "illustration.jpg"
+				}
+			}
+		},
+		"dwarf": {
+			"name": "Dwarf",
+			"description": "A smart and brave warrior, short in size big in action!",
+			"movement": 2,
+			"attack_dices": 2,
+			"defend_dices": 2,
+			"body_points": 7,
+			"mind_points": 3,
+			"starting_weapon": "short_sword",
+			"starting_armor": "",
+			"images": {
+				"avatar": {
+					"file_name": "avatar.jpg"
+				},
+				"sprite": {
+					"file_name": "sprite.jpg"
+				},
+				"illustration": {
+					"file_name": "illustration.jpg"
+				}
+			}
+		},
+		"elf": {
+			"name": "Elf",
+			"description": "The power of nature and agility!",
+			"movement": 2,
+			"attack_dices": 2,
+			"defend_dices": 2,
+			"body_points": 6,
+			"mind_points": 4,
+			"starting_weapon": "short_sword",
+			"starting_armor": "",
+			"images": {
+				"avatar": {
+					"file_name": "avatar.jpg"
+				},
+				"sprite": {
+					"file_name": "sprite.jpg"
+				},
+				"illustration": {
+					"file_name": "illustration.jpg"
+				}
+			}
+		},
+		"wizzard": {
+			"name": "Wizzard",
+			"description": "Controls the magic!",
+			"movement": 2,
+			"attack_dices": 1,
+			"defend_dices": 2,
+			"body_points": 4,
+			"mind_points": 6,
+			"starting_weapon": "dagger",
+			"starting_armor": "",
 			"images": {
 				"avatar": {
 					"file_name": "avatar.jpg"
