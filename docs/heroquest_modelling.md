@@ -1,3 +1,7 @@
+# HeroQuest Full Game
+
+The following models describes a full model vision of HeroQuest BoardGame.
+
 ## Thing
   Represents anything that can exist on the map.
 
