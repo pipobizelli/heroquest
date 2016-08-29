@@ -10,16 +10,16 @@ The objetivo of this document is to explain its data and convention.
 ## Session Setup
   Setup is the most important part of the session. It contains the initial preseet which will be replied, summoned and managed.
 
-  - *Heroes*
+  - **Heroes:**
     Here we setup all heroes that will be summoned on the match.
     It must be done before the match, and each hero is binded to an Account.
 
-  - *Enemies*
+  - **Enemies:**
     Contains all enemies that CAN appear on the match.
     Here we set its initial coordinates, but the client can only "Spawn"
     the monster when any Hero have line of sight of the monter.
 
-  - *Furniture*
+  - **Furniture:**
     All furniture on the map. By saying furniture, we comphreend Doors,
     Walls, Tables and other objects.
 
