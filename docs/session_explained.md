@@ -3,7 +3,7 @@
 The session JSON contains several entities in order to control the GamePlay.
 The objetivo of this document is to explain its data and convention.
 
-## Session
+## Session 
   Represents a GameSession played by users.
   Through the Session model, we can understand the status of the Whole playing match.
 
