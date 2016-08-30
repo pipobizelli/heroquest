@@ -1,0 +1,35 @@
+{ "height":10,
+ "layers":[
+        {
+         "data":[9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 71, 71, 71, 71, 71, 71, 71, 71, 9, 9, 71, 71, 71, 71, 71, 71, 71, 71, 9, 9, 71, 71, 71, 71, 71, 71, 71, 71, 9, 9, 71, 71, 71, 71, 71, 71, 71, 71, 9, 9, 71, 71, 71, 71, 71, 71, 71, 71, 9, 9, 71, 71, 71, 71, 71, 71, 71, 71, 9, 9, 71, 71, 71, 71, 71, 71, 71, 71, 9, 9, 103, 103, 103, 103, 103, 103, 103, 103, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+         "height":10,
+         "name":"Camada de Tiles 1",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":10,
+         "x":0,
+         "y":0
+        }],
+ "nextobjectid":1,
+ "orientation":"orthogonal",
+ "renderorder":"right-down",
+ "tileheight":32,
+ "tilesets":[
+        {
+         "columns":32,
+         "firstgid":1,
+         "image":"base_tileset.png",
+         "imageheight":2016,
+         "imagewidth":1024,
+         "margin":0,
+         "name":"mytileset",
+         "spacing":0,
+         "tilecount":2016,
+         "tileheight":32,
+         "tilewidth":32
+        }],
+ "tilewidth":32,
+ "version":1,
+ "width":10
+}

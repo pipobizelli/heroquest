@@ -1,0 +1,57 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>hello phaser!</title>
+        <script src="//cdn.jsdelivr.net/phaser/2.5.0/phaser.min.js"></script>
+    </head>
+    <body>
+
+    <script type="text/javascript">
+
+    window.onload = function() {
+
+        //  Note that this html file is set to pull down Phaser 2.5.0 from the JS Delivr CDN.
+        //  Although it will work fine with this tutorial, it's almost certainly not the most current version.
+        //  Be sure to replace it with an updated version before you start experimenting with adding your own code.
+
+        var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create });
+
+        function preload () {
+
+            game.load.image('logo', 'phaser.png');
+
+            game.load.tilemap('map', 'assets/tileset.json', null, Phaser.Tilemap.TILED_JSON);
+            game.load.image('tiles', 'assets/tileset.png');
+
+
+
+        }
+
+        function create () {
+
+            // var logo = game.add.sprite(game.world.centerX, game.world.centerY, 'logo');
+            // logo.anchor.setTo(0.5, 0.5);
+
+
+            this.map = this.add.tilemap('map');
+            this.map.addTilesetImage('mytileset', 'mytileset');
+
+            //this.layer = this.map.createLayer('Camada de Tiles 1');
+
+            //this.map.setCollision(20, true, this.layer);
+            //this.car = this.add.sprite(48, 48, 'car');
+            //this.car.anchor.set(0.5);
+            //this.physics.arcade.enable(this.car);
+
+            this.cursors = this.input.keyboard.createCursorKeys();
+
+
+        }
+
+    };
+
+    </script>
+
+    </body>
+</html>

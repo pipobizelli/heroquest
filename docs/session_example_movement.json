@@ -1,0 +1,50 @@
+{
+	"sessions": {
+		"session_id_1": {
+			"created_at": "2016-08-08T20h10s31",
+			"_setup": {
+				"furnitures": {},
+				"heroes": {
+					"h1": {
+						"class_id": "barbarian",
+						"starting_tile": "A1",
+						"account": {
+							"account_id": "renatodex_at_gmail_dot_com",
+							"name": "Renato Alves",
+							"email": "renatodex@gmail.com"
+						}
+					},
+				},
+				"enemies": {
+					"dhgih3784othkelhgj": {
+						"enemy_id": "goblin",
+						"starting_tile": "A2"
+					},
+					"bnkdlsjdu237420978": {
+						"enemy_id": "goblin",
+						"starting_tile": "A3"
+					},
+					"knigy7f545w345w32h": {
+						"enemy_id": "goblin",
+						"starting_tile": "A4"
+					}
+				}
+			},
+			"turns": {
+				"turn_1": {}
+			},
+			"summoned_enemies": {},
+			"summoned_heroes": {
+				"hero_id_1": {
+					"setup_id": "hskfhwqi9235y67tgjd",
+					"class_id": "barbarian",
+					"body_points": 5,
+					"mind_points": 0
+				},
+			}
+		}
+	},
+	"items": {},
+	"furnitures": {},
+	"enemies": {}
+}
