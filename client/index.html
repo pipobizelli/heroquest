@@ -9,44 +9,95 @@
 
     <script type="text/javascript">
 
+    var GridMovement = function(tile_dimension, tile_quantity) {
+      var dimension_array, quantity_array;
+
+      var init = function(tile_dimension, tile_quantity) {
+        dimension_array = tile_dimension.split("x");
+        quantity_array = tile_quantity.split("x");
+      }
+
+      var move = function(sprite, x, y) {
+        sprite.x = x*dimension_array[0];
+        sprite.y = y*dimension_array[1];
+      }
+
+      var get_position = function(sprite) {
+        var pos_x = sprite.x/dimension_array[0];
+        var pos_y = sprite.y/dimension_array[1];
+        return [pos_x, pos_y];
+      }
+
+
+      var move_increment = function(sprite, inc_x, inc_y) {
+        var position_array = get_position(sprite);
+        var destination_array = [position_array[0]+inc_x, position_array[1]+inc_y];
+        move(sprite, destination_array[0], destination_array[1]);
+      }
+
+      var move_down = function(sprite) {
+        move_increment(sprite, 0,+1);
+      }
+
+      var move_left = function(sprite) {
+        move_increment(sprite, -1,0);
+      }
+
+      var move_right = function(sprite) {
+        move_increment(sprite, +1,0);
+      }
+
+      var move_up = function(sprite) {
+        move_increment(sprite, 0,-1);
+      }
+
+      init(tile_dimension, tile_quantity);
+
+      return {
+        move:move,
+        get_position:get_position,
+        move_down:move_down,
+        move_up: move_up,
+        move_left: move_left,
+        move_right: move_right
+      }
+    }
+
     window.onload = function() {
-
-        //  Note that this html file is set to pull down Phaser 2.5.0 from the JS Delivr CDN.
-        //  Although it will work fine with this tutorial, it's almost certainly not the most current version.
-        //  Be sure to replace it with an updated version before you start experimenting with adding your own code.
-
-        var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create });
+        var game = new Phaser.Game(320, 320, Phaser.AUTO, '', { preload: preload, create: create, update: update });
+        window.grid = new GridMovement("32x32", "10x10");
 
         function preload () {
-
-            game.load.image('logo', 'phaser.png');
-
-            game.load.tilemap('map', 'assets/tileset.json', null, Phaser.Tilemap.TILED_JSON);
-            game.load.image('tiles', 'assets/tileset.png');
-
-
-
+            game.load.tilemap('map', 'assets/tileset.csv', null, Phaser.Tilemap.CSV);
+            game.load.image('tiles', 'assets/base_tileset.png');
+            game.load.spritesheet('hero', 'assets/charset.png', 32, 32);
         }
 
         function create () {
+            this.map = this.add.tilemap('map', 32, 32);
+            this.map.addTilesetImage('tiles');
+            this.layer = this.map.createLayer(0);
+            this.layer.resizeWorld();
 
-            // var logo = game.add.sprite(game.world.centerX, game.world.centerY, 'logo');
-            // logo.anchor.setTo(0.5, 0.5);
-
-
-            this.map = this.add.tilemap('map');
-            this.map.addTilesetImage('mytileset', 'mytileset');
-
-            //this.layer = this.map.createLayer('Camada de Tiles 1');
-
-            //this.map.setCollision(20, true, this.layer);
-            //this.car = this.add.sprite(48, 48, 'car');
-            //this.car.anchor.set(0.5);
-            //this.physics.arcade.enable(this.car);
-
+            window.hero = this.add.sprite(0,0, 'hero');
+            grid.move(hero, 1,1);
             this.cursors = this.input.keyboard.createCursorKeys();
+        }
 
+        function update() {
 
+          if(game.input.keyboard.downDuration(Phaser.Keyboard.LEFT, 1)) {
+            grid.move_left(hero);
+          }
+          if(game.input.keyboard.downDuration(Phaser.Keyboard.RIGHT, 1)) {
+            grid.move_right(hero);
+          }
+          if(game.input.keyboard.downDuration(Phaser.Keyboard.UP, 1)) {
+            grid.move_up(hero);
+          }
+          if(game.input.keyboard.downDuration(Phaser.Keyboard.DOWN, 1)) {
+            grid.move_down(hero);
+          }
         }
 
     };
