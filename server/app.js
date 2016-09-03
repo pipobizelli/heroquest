@@ -1,11 +1,34 @@
 var express = require('express');
+var firebase = require('firebase');
 var app = express();
+
+
+firebase.initializeApp({
+  databaseURL: "https://heroquest-ca81f.firebaseio.com"
+});
+var db = firebase.database();
+
+
+// Create Session
+app.post('/session', function(req, res) {
+  console.log('Creating session...');
+  var pushref = db.ref('/').child('sessions').push();
+  pushref.set({
+    "_setup": {
+      "created_at": (new Date()).toString()
+    }
+  });
+  res.send(pushref.key);
+});
+
 
 app.get('/session/connect', function (req, res) {
   res.send('Conecting to session...');
 });
 
 app.get('/session/join', function(req, res) {
+  var max_slots = 2;
+
   res.send('Checking if there are slots available...');
 });
 

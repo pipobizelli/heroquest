@@ -11,6 +11,8 @@
 
     <script type="text/javascript">
     window.onload = function() {
+        var session_id = prompt("What is the session_id?");
+
         var game = new Phaser.Game(320, 320, Phaser.AUTO, '', { preload: preload, create: create, update: update });
         window.controlable = new Controllable(game);
         window.grid = new GridMovement("32x32", "10x10");
