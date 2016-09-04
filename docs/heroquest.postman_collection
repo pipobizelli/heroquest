@@ -1,0 +1,39 @@
+{
+	"variables": [],
+	"info": {
+		"name": "HeroQuest",
+		"_postman_id": "6a927a2f-7348-1e9f-53cf-ed9663d962c9",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "session/create",
+			"request": {
+				"url": "http://localhost:3000/session",
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "session/connect",
+			"request": {
+				"url": "http://localhost:3000/session/-KQnY-3s1lC-U2dH0TVq/join?email",
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}
