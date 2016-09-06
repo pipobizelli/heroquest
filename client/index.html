@@ -48,8 +48,8 @@
 
     // Dispatchers
     var dispatchers = {
-      "toggle_join_flow" : function(state) {
-        state.toogle_join_flow = state;
+      "toggle_join_flow" : function(bool) {
+        state.toggle_join_flow = bool;
       },
       "update_session_data" : function(data) {
         state.session_data = data;
@@ -110,7 +110,7 @@
             var result = JSON.parse(text);
 
             if(result.error == undefined) {
-              dispatchers.toogle_join_flow(true);
+              dispatchers.toggle_join_flow(true);
               dispatchers.update_session_data(result);
             } else {
               console.log("Não rolou, mas você pode assistir.");
@@ -119,14 +119,15 @@
     };
 
     $(document).ready(function() {
+      
+      var session_id = "-KQvHK2iEJcde11jrLhv";
+      var server_url = "http://localhost:3000";
+
       setTimeout(function() {
-        // if(state.toggle_join_flow) {
-        //   promise.get([server_url, '/session/', session_id, '/ready'].join('')})
-        // }
-
-        
-
-      }, 1000);
+        if(state.toggle_join_flow) {
+          var ready = promise.get([server_url, '/session/', session_id, '/ready'].join(''));
+        }
+      }, 2000);
     })
 
     </script>

@@ -25,7 +25,7 @@ function build_error_json(code, description) {
 }
 
 function set_headers(res) {
-  res.header('Access-Control-Allow-Origin', 'http://localhost:8080');
+  res.header('Access-Control-Allow-Origin', 'http://localhost');
 }
 
 function build_action_json(action, data) {
