@@ -24,6 +24,10 @@ function build_error_json(code, description) {
   }
 }
 
+function set_headers(res) {
+  res.header('Access-Control-Allow-Origin', 'http://localhost:8080');
+}
+
 function build_action_json(action, data) {
   return {
     "action": {
@@ -36,6 +40,7 @@ function build_action_json(action, data) {
 
 // Create Session
 app.post('/session', function(req, res) {
+  set_headers(res);
   console.log('Creating session...');
   var pushref = db.child('sessions').push();
   pushref.set({
@@ -47,6 +52,8 @@ app.post('/session', function(req, res) {
 
 // Retrieve Session
 app.get('/session/:session_id', function(req, res) {
+  set_headers(res);
+
   console.log("Retrieving Session...");
   db.child('/sessions').child(req.params.session_id || "missigno").once('value').then(function(snapshot) {
     if(snapshot.val() == null) {
@@ -66,6 +73,8 @@ app.get('/session/:session_id', function(req, res) {
 
 // Join Session
 app.get('/session/:session_id/join', function(req, res) {
+  set_headers(res);
+
   // 1 - retrieve the whole session
   // 2 - add user to slot
   // 3 - return a session json
@@ -111,8 +120,13 @@ app.get('/session/:session_id/join', function(req, res) {
       "account": {
         "email": req.query.email
       }
+    }, function(error) {
+      //@TODO: Find a way to return the DataSnapshot aftersave
+      db.child('/sessions').child(req.params.session_id || "missigno").once('value').then(function(snapshot) {
+        res.send(snapshot.val());
+      });
     });
-    res.send(snapshot.val());
+
   }).catch(function(error) {
     // ------------------------------
     // 4 - Error management
@@ -139,6 +153,7 @@ app.get('/session/:session_id/join', function(req, res) {
 // 4 - give an error message if slots were not fullfilled
 app.get('/session/:session_id/ready', function(req, res) {
   console.log('Is the session ready?');
+  set_headers(res);
 
   db.child('/sessions').child(req.params.session_id || "missigno").once('value').then(function(snapshot) {
     if(snapshot.val() == null) {

@@ -3,58 +3,145 @@
     <head>
         <meta charset="UTF-8" />
         <title>hello phaser!</title>
+        <script src="js/zepto.js"></script>
+        <script src="js/promise.js"></script>
         <script src="//cdn.jsdelivr.net/phaser/2.5.0/phaser.min.js"></script>
         <script src="controlable.js"></script>
         <script src="grid_movement.js"></script>
+
+        <style>
+          .player-status {
+            position: absolute;
+            left:340px;
+            width: 320px;
+            height: 320px;
+            box-sizing: border-box;
+            font-size: 0px;
+          }
+
+          .player-slot {
+            width:50%;
+            display:inline-block;
+            border:1px solid #000;
+            background-color: #ccc;
+            height:180px;
+            box-sizing: border-box;
+          }
+
+          .player-slot p, .player-slot h2 {
+            font-size: 18px;
+            font-family: Arial;
+          }
+
+          .player-slot h2 {
+            margin-left:20px;
+          }
+        </style>
     </head>
     <body>
-
     <script type="text/javascript">
+    // Initial State
+    var state = {
+      "toggle_join_flow": false,
+      "session_data": {}
+    }
+
+    // Dispatchers
+    var dispatchers = {
+      "toggle_join_flow" : function(state) {
+        state.toogle_join_flow = state;
+      },
+      "update_session_data" : function(data) {
+        state.session_data = data;
+      }
+    }
+
+
+    function start_game() {
+      window.game = new Phaser.Game(320, 320, Phaser.AUTO, '', { preload: preload, create: create, update: update });
+      window.controlable = new Controllable(game);
+      window.grid = new GridMovement("32x32", "10x10");
+    }
+
+    function preload () {
+        game.load.tilemap('map', 'assets/tileset.csv', null, Phaser.Tilemap.CSV);
+        game.load.image('tiles', 'assets/base_tileset.png');
+        game.load.spritesheet('hero', 'assets/charset.png', 32, 32);
+    }
+
+    function create () {
+        // Rendering Tilemaps and World
+        this.map = this.add.tilemap('map', 32, 32);
+        this.map.addTilesetImage('tiles');
+        this.layer = this.map.createLayer(0);
+        this.layer.resizeWorld();
+
+        // Rendering Slot 1
+        window.p1 = this.add.tileSprite(0, 0, 32, 32, 'hero');
+        p1.animations.add('iddle', [0], 10, true);
+        p1.animations.play('iddle');
+
+        // Rendering Slot 2
+        window.p2 = this.add.tileSprite(0, 0, 32, 32, 'hero');
+        p2.animations.add('iddle', [5], 10, true);
+        p2.animations.play('iddle');
+
+        // Setup slots initial position
+        grid.move(p1, 1,1);
+        grid.move(p2, 2,2);
+
+        // Delegate which Slot the player controls
+        controlable.delegate(p1);
+    }
+
+    function update() {
+      controlable.control();
+    }
+
+    window.game = null;
     window.onload = function() {
-        var session_id = prompt("What is the session_id?");
+        var session_id = "-KQvHK2iEJcde11jrLhv";
+        var email = prompt("What is your email?")
+        var server_url = "http://localhost:3000";
 
-        var game = new Phaser.Game(320, 320, Phaser.AUTO, '', { preload: preload, create: create, update: update });
-        window.controlable = new Controllable(game);
-        window.grid = new GridMovement("32x32", "10x10");
+        promise.get([server_url, '/session/', session_id, '/join'].join(''), {
+          email: email
+        }).then(function(error, text, xhr) {
+            var result = JSON.parse(text);
 
-        function preload () {
-            game.load.tilemap('map', 'assets/tileset.csv', null, Phaser.Tilemap.CSV);
-            game.load.image('tiles', 'assets/base_tileset.png');
-            game.load.spritesheet('hero', 'assets/charset.png', 32, 32);
-        }
-
-        function create () {
-            // Rendering Tilemaps and World
-            this.map = this.add.tilemap('map', 32, 32);
-            this.map.addTilesetImage('tiles');
-            this.layer = this.map.createLayer(0);
-            this.layer.resizeWorld();
-
-            // Rendering Slot 1
-            window.p1 = this.add.tileSprite(0, 0, 32, 32, 'hero');
-            p1.animations.add('iddle', [0], 10, true);
-            p1.animations.play('iddle');
-
-            // Rendering Slot 2
-            window.p2 = this.add.tileSprite(0, 0, 32, 32, 'hero');
-            p2.animations.add('iddle', [5], 10, true);
-            p2.animations.play('iddle');
-
-            // Setup slots initial position
-            grid.move(p1, 1,1);
-            grid.move(p2, 2,2);
-
-            // Delegate which Slot the player controls
-            controlable.delegate(p1);
-        }
-
-        function update() {
-          controlable.control();
-        }
-
+            if(result.error == undefined) {
+              dispatchers.toogle_join_flow(true);
+              dispatchers.update_session_data(result);
+            } else {
+              console.log("Não rolou, mas você pode assistir.");
+            }
+        });
     };
 
+    $(document).ready(function() {
+      setTimeout(function() {
+        // if(state.toggle_join_flow) {
+        //   promise.get([server_url, '/session/', session_id, '/ready'].join('')})
+        // }
+
+        
+
+      }, 1000);
+    })
+
     </script>
+
+    <section class="player-status">
+      <h1>Jogadores conectados</h1>
+      <div class="player-slot player-slot-1">
+        <h2>Slot 1</h2>
+        <p class="player-email"></p>
+      </div>
+      <div class="player-slot player-slot-2">
+        <h2>Slot 2</h2>
+        <p class="player-email"></p>
+      </div>
+    </section>
 
     </body>
 </html>
