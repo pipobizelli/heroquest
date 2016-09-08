@@ -25,7 +25,7 @@ function build_error_json(code, description) {
 }
 
 function set_headers(res) {
-  res.header('Access-Control-Allow-Origin', 'http://localhost');
+  res.header('Access-Control-Allow-Origin', 'http://localhost:8080');
 }
 
 function build_action_json(action, data) {
@@ -61,7 +61,7 @@ app.get('/session/:session_id', function(req, res) {
     }
     return snapshot;
   }).then(function(snapshot) {
-    res.send(snapshot.val());
+    res.send(build_action_json("update_session", snapshot.val()));
   }).catch(function(error) {
     if(error == RESOURCE_NOT_FOUND_ERROR) {
       res.send(build_error_json(0, "Resource was not found"));
@@ -123,7 +123,7 @@ app.get('/session/:session_id/join', function(req, res) {
     }, function(error) {
       //@TODO: Find a way to return the DataSnapshot aftersave
       db.child('/sessions').child(req.params.session_id || "missigno").once('value').then(function(snapshot) {
-        res.send(snapshot.val());
+        res.send(build_action_json("account_joined", snapshot.val()))
       });
     });
 

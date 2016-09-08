@@ -3,11 +3,16 @@
     <head>
         <meta charset="UTF-8" />
         <title>hello phaser!</title>
+        <script src="js/underscore.js"></script>
+        <script src="js/backbone.js"></script>
+        <script src="js/backbone.supermodel.js"></script>
         <script src="js/zepto.js"></script>
+        <script src="js/rsvp.js"></script>
         <script src="js/promise.js"></script>
         <script src="//cdn.jsdelivr.net/phaser/2.5.0/phaser.min.js"></script>
         <script src="controlable.js"></script>
         <script src="grid_movement.js"></script>
+        <script src="models/session.js"></script>
 
         <style>
           .player-status {
@@ -26,6 +31,7 @@
             background-color: #ccc;
             height:180px;
             box-sizing: border-box;
+            background-color: #7e5454;
           }
 
           .player-slot p, .player-slot h2 {
@@ -36,26 +42,176 @@
           .player-slot h2 {
             margin-left:20px;
           }
+
+          .join-game {
+            display: block;
+            padding: 6px;
+            border-radius: 0px;
+            border: 1px solid #000;
+            font-size: 18px;
+            margin-bottom: 5px;
+          }
+
+          .slot-taken {
+            background-color: #238260;
+          }
         </style>
     </head>
     <body>
     <script type="text/javascript">
+    // Lodash Extension Methods (YAY)
+    _.last = function(obj) {
+      var keys = _.keys(obj);
+      return obj[keys[keys.length-1]];
+    }
+    _.first = function(obj) {
+      var keys = _.keys(obj);
+      return obj[keys[0]];
+    }
+    _.objByKey = function(obj, key) {
+      var keys = _.keys(obj);
+      return obj[keys[key]];
+    }
+    _.try = function(obj, dotpath) {
+      var last_value = obj;
+      var path_arr = dotpath.split(".");
+      for (var i = 0; i < path_arr.length; i++) {
+        if(last_value[path_arr[i]] != undefined) {
+          last_value = last_value[path_arr[i]];
+        } else {
+          return undefined;
+        }
+      }
+      return last_value;
+    }
+    // -------------------------------
+    // Initialize proper Promises
+    var AjaxPromise = function() {
+      this.get = function(url, params) {
+        var promise = new RSVP.Promise(function(resolve, reject) {
+          $.ajax({method: 'GET',url: url,data: params,
+            success: function(data, textStatus, jqXHR) {
+              resolve(data);
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+              reject(errorThrown);
+            }
+          });
+        });
+
+        return promise;
+      }
+
+      return {
+        get:this.get
+      }
+    }
+    window.ajax = new AjaxPromise();
+    // -----------------------------------
     // Initial State
-    var state = {
+    window.state = {
       "toggle_join_flow": false,
-      "session_data": {}
+      "session_data": {},
+      "session_id": "-KQvHK2iEJcde11jrLhv",
+      "server_url": "http://localhost:3000",
+      "toggle_slot_1": false,
+      "toggle_slot_2": false,
+      "slot_emails": {
+        "1": {email: ""},
+        "2": {email: ""}
+      },
+      "game_state": "connecting",
+      "game_started": false
     }
 
     // Dispatchers
-    var dispatchers = {
+    window.dispatchers = {
       "toggle_join_flow" : function(bool) {
         state.toggle_join_flow = bool;
       },
       "update_session_data" : function(data) {
         state.session_data = data;
+      },
+      "toggle_slot_1" : function(bool) {
+        state.toggle_slot_1 = bool;
+      },
+      "toggle_slot_2" : function(bool) {
+        state.toggle_slot_2 = bool;
+      },
+      "set_slot_email" : function(slot_number, email) {
+        state.slot_emails[slot_number].email = email;
+      },
+      "set_email": function(email) {
+        state.email = email;
+      },
+      "start_game": function() {
+        if(state.game_state == "connecting") {
+          state.game_state = "playing"
+        }
+      },
+      "started_game": function() {
+        state.game_started = true;
       }
     }
 
+    window.action_methods = {
+      "account_joined" : function(action) {
+        console.log(`ActionMethod: Adicionar email -> ${window.state.email}`);
+        dispatchers.toggle_join_flow(true);
+        update_session(action.data);
+      },
+      "waiting_quorum" : function(action) {
+        console.log("ActionMethod: Esperando Quorum");
+      },
+      "update_session" : function(action) {
+        console.log("ActionMethod: Atualizar Session");
+        update_session(action.data);
+      }
+    }
+
+    function build_session(session) {
+      var session = new Session();
+    }
+
+    function update_session(session) {
+      dispatchers.update_session_data(session);
+
+      var heroes = _.try(session, "_setup.heroes");
+      var s1 = _.keys(heroes)[0];
+      var s2 = _.keys(heroes)[1];
+      dispatchers.toggle_slot_1(false);
+      dispatchers.toggle_slot_2(false);
+
+      if(s1 != undefined) {
+        dispatchers.toggle_slot_1(true);
+        dispatchers.set_slot_email(1, heroes[s1].account.email);
+      }
+      if(s2 != undefined) {
+        dispatchers.toggle_slot_2(true);
+        dispatchers.set_slot_email(2, heroes[s2].account.email);
+      }
+
+      if(s1 && s2) {
+        dispatchers.start_game();
+      }
+    }
+
+    function process_action(result) {
+      if(result.action == undefined) {
+        throw result.error;
+      } else {
+        // console.log("executing action.."+result.action.name)
+        action_methods[result.action.name](result.action);
+      }
+    }
+
+    function process_error(action) {
+      if(action.error) {
+        console.log(action.error);
+      } else {
+        console.log(action);
+      }
+    }
 
     function start_game() {
       window.game = new Phaser.Game(320, 320, Phaser.AUTO, '', { preload: preload, create: create, update: update });
@@ -98,42 +254,80 @@
       controlable.control();
     }
 
+    function call_join_game(session_id, email) {
+      ajax.get([state.server_url, '/session/', session_id, '/join'].join(''), {
+        email: email
+      }).then(function(error, text, xhr) {
+        process_action(error, text);
+      }).catch(function(error) {
+        process_error(error)
+      });
+    }
+
+    function call_update_session(session_id) {
+      ajax.get([state.server_url, '/session/', session_id].join(''), {}).then(function(error, text, xhr) {
+        process_action(error, text);
+      }).catch(function(error) {
+        process_error(error);
+      })
+    }
+
+    function call_ready(session_id) {
+      // promise.get([state.server_url, '/session/', session_id, '/ready'].join('')).then(function(error, text, xhr) {
+      //   process_action(text);
+      // });
+    }
+
     window.game = null;
     window.onload = function() {
-        var session_id = "-KQvHK2iEJcde11jrLhv";
-        var email = prompt("What is your email?")
-        var server_url = "http://localhost:3000";
-
-        promise.get([server_url, '/session/', session_id, '/join'].join(''), {
-          email: email
-        }).then(function(error, text, xhr) {
-            var result = JSON.parse(text);
-
-            if(result.error == undefined) {
-              dispatchers.toggle_join_flow(true);
-              dispatchers.update_session_data(result);
-            } else {
-              console.log("Não rolou, mas você pode assistir.");
-            }
-        });
     };
 
     $(document).ready(function() {
-      
-      var session_id = "-KQvHK2iEJcde11jrLhv";
-      var server_url = "http://localhost:3000";
+      setInterval(function() {
+        // if(state.toggle_join_flow) {
+        //   call_ready(state.session_id);
+        // }
+        call_update_session(state.session_id);
 
-      setTimeout(function() {
-        if(state.toggle_join_flow) {
-          var ready = promise.get([server_url, '/session/', session_id, '/ready'].join(''));
+        if(!_.isEmpty(_.try(state.session_data, "_setup.heroes"))) {
+          if(_.objByKey(state.session_data._setup.heroes,0)) {
+            $(".player-slot-1 h2").text(_.objByKey(state.session_data._setup.heroes,0).account.email || "Slot 1");
+          } else {
+            $(".player-slot-1 h2").text("Slot 1")
+          }
+          if(_.objByKey(state.session_data._setup.heroes,1)) {
+            $(".player-slot-2 h2").text(_.objByKey(state.session_data._setup.heroes,1).account.email || "Slot 2");
+          } else {
+            $(".player-slot-2 h2").text("Slot 2")
+          }
+        } else {
+          $(".player-slot-1 h2").text("Slot 1")
+          $(".player-slot-2 h2").text("Slot 2")
         }
-      }, 2000);
+
+        $(".player-slot-1").toggleClass("slot-taken",state.toggle_slot_1);
+        $(".player-slot-2").toggleClass("slot-taken",state.toggle_slot_2);
+
+        if(state.game_state == "playing" && !state.game_started) {
+          dispatchers.started_game();
+          start_game();
+        }
+      }, 1000);
+
+
+      $(".join-game").bind("click", function() {
+        var email = prompt("What is your email?");
+        dispatchers.set_email(email);
+
+        call_join_game(state.session_id, email);
+      })
     })
 
     </script>
 
     <section class="player-status">
       <h1>Jogadores conectados</h1>
+      <button class="join-game">Entrar no Jogo</button>
       <div class="player-slot player-slot-1">
         <h2>Slot 1</h2>
         <p class="player-email"></p>
