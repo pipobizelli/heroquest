@@ -1,39 +1,19 @@
-window.Model = window.Model || {};
-window.Collection = window.Collection || {};
-
-/* - - - - - - - - - - - - - - - - -*/
-
-Model.SessionSetupHero = Supermodel.Model.extend({})
-Collection.SessionSetupHero = Backbone.Collection.extend({
-  model: function(attrs, options) {
-    return Model.SessionSetupHero.create(attrs, options);
-  }
-});
-
-/* - - - - - - - - - - - - - - - - -*/
-
-
-Model.SessionSetup = Supermodel.Model.extend({})
-Model.SessionSetup.has().many('heroes', {
-  collection: Model.SessionSetupHero,
-  inverse: 'setup'
-});
-
-/* - - - - - - - - - - - - - - - - -*/
-
-Model.SessionAccount = Supermodel.Model.extend({})
-Collection.SessionAccount = Backbone.Collection.extend({
-  model: function(attrs, options) {
-    return Model.SessionAccount.create(attrs, options);
-  }
-});
-
-/* - - - - - - - - - - - - - - - - -*/
-
-Model.Session = Supermodel.Model.extend({});
-Model.Session.has().one('_setup', {
-  model: Model.SessionSetup,
-  inverse: 'session'
-});
-
-/* - - - - - - - - - - - - - - - - -*/
+// window.Model = window.Model || {};
+//
+// Model.Session = AppModel.extend({
+//   methods: {
+//     full_name: function() {
+//       return this.get('first_name') + ' ' + this.get('last_name');
+//     }
+//   }
+// });
+//
+// window.ss = new Model.Session({ created_at: "lalala", first_name: "Renato", last_name: "Alves" });
+//
+// console.log("Test=",window.ss.get('created_at'))
+//
+// window.ss.set('created_at', 'hoje');
+//
+// console.log("Test=",window.ss.get('created_at'))
+//
+// console.log(window.ss.full_name());
