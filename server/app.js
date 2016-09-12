@@ -94,8 +94,13 @@ function call_active_action(session_id) {
   }).then(function(snapshot) {
     var heroes = snapshot.child("_setup/heroes").val();
     var rounds = snapshot.child("rounds").val();
-    var last_round = __.values(rounds)[snapshot.child("rounds").numChildren()-1];
 
+    if(rounds == null) {
+      call_create_round(session_id);
+      return build_action_json("waiting_new_round", {});
+    }
+
+    var last_round = __.values(rounds)[snapshot.child("rounds").numChildren()-1];
     var heroes_array = __.keys(heroes);
 
     var actions_array = __.map(__.values(last_round), function(obj) {
