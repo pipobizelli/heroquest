@@ -335,6 +335,8 @@ app.post('/session/:session_id/action/:action_type/:thing_id', function(req, res
           .child('rounds')
           .child(roundkey).push();
 
+        console.log(req.params);
+
         var action_object = {
           position: req.params.position || "1,1",
           summoned_id: json_response.action.data.hero_id,
