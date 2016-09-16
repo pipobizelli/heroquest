@@ -7,8 +7,14 @@ const MAX_ACTIONS = 2;
 
 var __ = require('lodash');
 var validator = require('validator');
+var bodyParser = require('body-parser')
 var express = require('express');
 var app = express();
+
+app.use(bodyParser.json());       // to support JSON-encoded bodies
+app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
+  extended: true
+}));
 
 var firebase = require('firebase');
 firebase.initializeApp({
@@ -314,6 +320,9 @@ app.get('/session/:session_id/turn', function(req, res) {
 });
 
 app.post('/session/:session_id/action/:action_type/:thing_id', function(req, res) {
+
+  console.log(req.body);
+  
   call_active_action(req.params.session_id || "missigno").then(function(json_response) {
     var roundkey;
 

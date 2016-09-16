@@ -152,7 +152,6 @@
     window.state = {
       "hero_id": "",
       "email": "",
-      "turn": "",
       "slot": null,
       "toggle_join_flow": false,
       "session_data": {},
@@ -161,7 +160,14 @@
       "toggle_slot_1": false,
       "toggle_slot_2": false,
       "game_state": "connecting",
-      "game_started": false
+      "game_started": false,
+      
+      "turn": "",
+
+      "pos_x" : 0,
+      "pos_x" : 0,
+
+      "things": []
     }
 
     // Dispatchers
@@ -201,6 +207,10 @@
       "set_turn": function(id) {
         state.turn = id;
       }
+      "set_position": function(x, y) {
+        state.pos_x = x;
+        state.pos_y = y;
+      }
     }
 
     window.action_methods = {
@@ -220,15 +230,15 @@
       },
       "update_session" : function(action) {
         console.log("ActionMethod: Atualizar Session");
-        //console.log(action.data);
         update_session(action.data);
       },
       "active_turn" : function(action) {
-        console.log("ActionMethod: Atualizar Session");
         //console.log(action.data);
         set_turn(action.data);
+      },
+      "action_saved" : function(action) {
+        console.log("ActionMethod: Atualizar Session");
       }
-      
     }
 
     function build_session(session) {
@@ -279,7 +289,7 @@
 
     function start_game() {
       window.game = new Phaser.Game(320, 320, Phaser.AUTO, '', { preload: preload, create: create, update: update });
-      console.log("Instancia do jogo criada..", game);
+      // console.log("Instancia do jogo criada..", game);
       window.controlable = new Controllable(game);
       window.grid = new GridMovement("32x32", "10x10");
     }
@@ -307,9 +317,11 @@
         p2.animations.add('iddle', [5], 10, true);
         p2.animations.play('iddle');
 
+        console.log(state);
+
         // Setup slots initial position
         grid.move(p1, 1,1);
-        grid.move(p2, 2,2);
+        grid.move(p2, 1,2);
 
         console.log("Jogo perfeitamente criado!");
 
@@ -349,6 +361,16 @@
 
     function call_set_turn (session_id) {
       ajax.get([state.server_url, '/session/', session_id, '/turn'].join(''), {}).then(function(error, text, xhr) {
+        process_action(error, text);
+      }).catch(function(error) {
+        process_error(error);
+      })
+    }
+
+    function call_action (session_id, type, hero_id, data) {
+      ajax.post([state.server_url, '/session/', session_id, '/action/', type, '/', hero_id].join(''), {
+        position: data.pos
+      }).then(function(error, text, xhr) {
         process_action(error, text);
       }).catch(function(error) {
         process_error(error);
@@ -410,8 +432,6 @@
           // sua vez
           } else {
             $('.modal_turn').hide();
-
-            console.log("sua vez");
           }
         }
 
@@ -423,7 +443,7 @@
         var email = prompt("What is your email?");
         dispatchers.set_email(email);
         call_join_game(state.session_id, email);
-      })
+      });
 
       $(".take-slot").bind("click", function() {
         var slot = parseInt(prompt("Qual Slot?"));
@@ -433,8 +453,8 @@
         dispatchers.set_hero_id(hero_id);
         dispatchers.set_email(email);
         dispatchers.set_slot(slot);
-      })
-    })
+      });
+    });
 
     </script>
 

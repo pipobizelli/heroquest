@@ -7,6 +7,7 @@ var Controllable = function(game) {
 
   this.control = function() {
     if(game.input.keyboard.downDuration(Phaser.Keyboard.LEFT, 1)) {
+      console.log(state);
       grid.move_left(chosen_sprite);
     }
     if(game.input.keyboard.downDuration(Phaser.Keyboard.RIGHT, 1)) {
