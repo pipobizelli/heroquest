@@ -129,7 +129,22 @@
     var AjaxPromise = function() {
       this.get = function(url, params) {
         var promise = new RSVP.Promise(function(resolve, reject) {
-          $.ajax({method: 'GET',url: url,data: params,
+          $.ajax({type: 'GET',url: url,data: params,
+            success: function(data, textStatus, jqXHR) {
+              resolve(data);
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+              reject(errorThrown);
+            }
+          });
+        });
+
+        return promise;
+      }
+
+      this.post = function(url, params) {
+        var promise = new RSVP.Promise(function(resolve, reject) {
+          $.ajax({type: 'POST',url: url,data: params,
             success: function(data, textStatus, jqXHR) {
               resolve(data);
             },
@@ -143,7 +158,8 @@
       }
 
       return {
-        get:this.get
+        get:this.get,
+        post: this.post
       }
     }
     window.ajax = new AjaxPromise();
@@ -161,13 +177,15 @@
       "toggle_slot_2": false,
       "game_state": "connecting",
       "game_started": false,
-      
+
       "turn": "",
 
       "pos_x" : 0,
       "pos_x" : 0,
 
-      "things": []
+      "things": [],
+
+      "player_acting": false
     }
 
     // Dispatchers
@@ -206,10 +224,13 @@
       },
       "set_turn": function(id) {
         state.turn = id;
-      }
+      },
       "set_position": function(x, y) {
         state.pos_x = x;
         state.pos_y = y;
+      },
+      "set_player_acting": function(bool) {
+        state.player_acting = bool;
       }
     }
 
@@ -224,6 +245,9 @@
         dispatchers.set_slot(index);
 
         update_session(action.data);
+
+        var hero_id = _.keys(state.session_data._setup.heroes)[index];
+        dispatchers.set_hero_id(hero_id);
       },
       "waiting_quorum" : function(action) {
         console.log("ActionMethod: Esperando Quorum");
@@ -233,7 +257,7 @@
         update_session(action.data);
       },
       "active_turn" : function(action) {
-        //console.log(action.data);
+        console.log("ActionMethod: Atualizar Turn");
         set_turn(action.data);
       },
       "action_saved" : function(action) {
@@ -331,7 +355,10 @@
 
     function update() {
       if(window.state.slot != null) {
-        controlable.control();
+        controlable.control(function() {
+          console.log("EXECUTÔ");
+          dispatchers.set_player_acting(true);
+        });
 
         if(window.state.slot == 0) {
           controlable.delegate(window.p1);
@@ -368,9 +395,7 @@
     }
 
     function call_action (session_id, type, hero_id, data) {
-      ajax.post([state.server_url, '/session/', session_id, '/action/', type, '/', hero_id].join(''), {
-        position: data.pos
-      }).then(function(error, text, xhr) {
+      ajax.post([state.server_url, '/session/', session_id, '/action/', type, '/', hero_id].join(''), data).then(function(error, text, xhr) {
         process_action(error, text);
       }).catch(function(error) {
         process_error(error);
@@ -420,18 +445,20 @@
         }
 
         if (state.game_started) {
+          call_set_turn(state.session_id);
 
-          // não tem turno setado ainda 
-          if (state.turn == "") {
-            call_set_turn(state.session_id);  
-
-          // vez do amiguinho
-          } else if(state.turn != state.hero_id) {
+          if(state.turn != state.hero_id) {
             $('.modal_turn').show();
-          
-          // sua vez
           } else {
             $('.modal_turn').hide();
+          }
+
+          if(state.player_acting) {
+            console.log("ENTRO!!");
+            dispatchers.set_player_acting(false);
+            call_action(state.session_id, 'move', state.turn, {
+              position: "2,2"
+            })
           }
         }
 
@@ -449,7 +476,7 @@
         var slot = parseInt(prompt("Qual Slot?"));
         var email = _.objByKey(state.session_data._setup.heroes, slot).account.email;
         var hero_id = _.keys(state.session_data._setup.heroes)[slot];
-        
+
         dispatchers.set_hero_id(hero_id);
         dispatchers.set_email(email);
         dispatchers.set_slot(slot);
