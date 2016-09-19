@@ -1,0 +1,19 @@
+{
+	"General": {
+		"header": "http://localhost:8080",
+		"port": 3000,
+		"maxSlots": 2,
+		"maxActions": 2
+	},
+
+	"db":{
+		"url": "https://heroquest-ca81f.firebaseio.com"
+	},
+
+	"Errors": {
+		"notFound": "RESOURCE_NOT_FOUND",
+		"noSlots": "NO_SLOTS_ERROR",
+		"invalidEmail": "INVALID_EMAIL_ERROR",
+		"alreadyConnected": "EMAIL_ALREADY_CONNECTED_ERROR"
+	}
+}
