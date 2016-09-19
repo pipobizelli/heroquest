@@ -1,26 +1,30 @@
 <!doctype html>
 <html>
     <head>
-        <meta charset="UTF-8" />
-        <title>Hero Quest!</title>
-        <!-- Javascript Vendor Loading -->
-        <script src="javascript/vendor/lodash.js"></script>
-        <script src="javascript/vendor/zepto.js"></script>
-        <script src="javascript/vendor/rsvp.js"></script>
-        <script src="javascript/vendor/phaser.min.js"></script>
+      <meta charset="UTF-8" />
+      <title>Hero Quest!</title>
+      <!-- Javascript Vendor Loading -->
+      <script src="javascript/vendor/lodash.js"></script>
+      <script src="javascript/vendor/zepto.js"></script>
+      <script src="javascript/vendor/rsvp.js"></script>
+      <script src="javascript/vendor/phaser.min.js"></script>
 
-        <!-- Javascript Library Loading -->
-        <script src="javascript/lib/lodash_extension.js"></script>
-        <script src="javascript/lib/ajax_promise.js"></script>
+      <!-- Javascript Library Loading -->
+      <script src="javascript/lib/lodash_extension.js"></script>
+      <script src="javascript/lib/ajax_promise.js"></script>
 
-        <!-- Javascript Model Loading -->
-        <script src="javascript/models/controlable.js"></script>
-        <script src="javascript/models/grid_movement.js"></script>
-        <script src="javascript/models/app_model.js"></script>
-        <script src="javascript/models/session.js"></script>
+      <!-- Javascript Model Loading -->
+      <script src="javascript/models/controlable.js"></script>
+      <script src="javascript/models/grid_movement.js"></script>
+      <script src="javascript/models/app_model.js"></script>
+      <script src="javascript/models/session.js"></script>
+      <script src="javascript/models/facade/server.js"></script>
 
-        <!-- Stylesheet Loading -->
-        <link href="stylesheets/index.css" rel="stylesheet" type="text/css"></link>
+      <!-- Javascript ViewModel Loading -->
+      <script src="javascript/viewmodels/game_hud.js"></script>
+
+      <!-- Stylesheet Loading -->
+      <link href="stylesheets/index.css" rel="stylesheet" type="text/css"></link>
     </head>
     <body>
     <script type="text/javascript">
@@ -37,16 +41,27 @@
       "toggle_slot_2": false,
       "game_state": "connecting",
       "game_started": false,
-
       "turn": "",
-
-      "pos_x" : 0,
-      "pos_x" : 0,
-
-      "things": [],
-
       "player_acting": false
     }
+
+    // Instantiate Request Obj
+    window.server = new Server(state.server_url,  {
+      success: function(result) {
+        if(result.action == undefined) {
+          throw result.error;
+        } else {
+          action_methods[result.action.name](result.action);
+        }
+      },
+      error: function(action) {
+        if(action.error) {
+          console.log(action.error);
+        } else {
+          console.log(action);
+        }
+      }
+    });
 
     // Dispatchers
     window.dispatchers = {
@@ -85,10 +100,6 @@
       "set_turn": function(id) {
         state.turn = id;
       },
-      "set_position": function(x, y) {
-        state.pos_x = x;
-        state.pos_y = y;
-      },
       "set_player_acting": function(bool) {
         state.player_acting = bool;
       }
@@ -118,15 +129,11 @@
       },
       "active_turn" : function(action) {
         console.log("ActionMethod: Atualizar Turn");
-        set_turn(action.data);
+        dispatchers.set_turn(action.data.hero_id);
       },
       "action_saved" : function(action) {
         console.log("ActionMethod: Atualizar Session");
       }
-    }
-
-    function build_session(session) {
-      var session = new Session();
     }
 
     function update_session(session) {
@@ -150,27 +157,9 @@
       }
     }
 
-    function set_turn(session) {
-      dispatchers.set_turn(session.hero_id);
-    }
+    window.game_hud = new GameHud();
 
-    function process_action(result) {
-      if(result.action == undefined) {
-        throw result.error;
-      } else {
-        // console.log("executing action.."+result.action.name)
-        action_methods[result.action.name](result.action);
-      }
-    }
-
-    function process_error(action) {
-      if(action.error) {
-        console.log(action.error);
-      } else {
-        console.log(action);
-      }
-    }
-
+    // Phaser Engine
     function start_game() {
       window.game = new Phaser.Game(320, 320, Phaser.AUTO, '', { preload: preload, create: create, update: update });
       // console.log("Instancia do jogo criada..", game);
@@ -216,7 +205,6 @@
     function update() {
       if(window.state.slot != null) {
         controlable.control(function() {
-          console.log("EXECUTÔ");
           dispatchers.set_player_acting(true);
         });
 
@@ -228,100 +216,31 @@
       }
     }
 
-    function call_join_game(session_id, email) {
-      ajax.get([state.server_url, '/session/', session_id, '/join'].join(''), {
-        email: email
-      }).then(function(error, text, xhr) {
-        process_action(error, text);
-      }).catch(function(error) {
-        process_error(error)
-      });
-    }
-
-    function call_update_session(session_id) {
-      ajax.get([state.server_url, '/session/', session_id].join(''), {}).then(function(error, text, xhr) {
-        process_action(error, text);
-      }).catch(function(error) {
-        process_error(error);
-      })
-    }
-
-    function call_set_turn (session_id) {
-      ajax.get([state.server_url, '/session/', session_id, '/turn'].join(''), {}).then(function(error, text, xhr) {
-        process_action(error, text);
-      }).catch(function(error) {
-        process_error(error);
-      })
-    }
-
-    function call_action (session_id, type, hero_id, data) {
-      ajax.post([state.server_url, '/session/', session_id, '/action/', type, '/', hero_id].join(''), data).then(function(error, text, xhr) {
-        process_action(error, text);
-      }).catch(function(error) {
-        process_error(error);
-      })
-    }
-
-    function call_ready(session_id) {
-      // promise.get([state.server_url, '/session/', session_id, '/ready'].join('')).then(function(error, text, xhr) {
-      //   process_action(text);
-      // });
-    }
-
     window.game = null;
     window.onload = function() {
     };
 
     $(document).ready(function() {
       setInterval(function() {
-        // if(state.toggle_join_flow) {
-        //   call_ready(state.session_id);
-        // }
-        call_update_session(state.session_id);
-
-        if(!_.isEmpty(_.try(state.session_data, "_setup.heroes"))) {
-          if(_.objByKey(state.session_data._setup.heroes,0)) {
-            $(".player-slot-1 h2").text(_.objByKey(state.session_data._setup.heroes,0).account.email || "Slot 1");
-          } else {
-            $(".player-slot-1 h2").text("Slot 1")
-          }
-          if(_.objByKey(state.session_data._setup.heroes,1)) {
-            $(".player-slot-2 h2").text(_.objByKey(state.session_data._setup.heroes,1).account.email || "Slot 2");
-          } else {
-            $(".player-slot-2 h2").text("Slot 2")
-          }
-        } else {
-          $(".player-slot-1 h2").text("Slot 1")
-          $(".player-slot-2 h2").text("Slot 2")
-        }
-
-        $(".player-slot-1").toggleClass("slot-taken",state.toggle_slot_1);
-        $(".player-slot-2").toggleClass("slot-taken",state.toggle_slot_2);
+        server.update_session(state.session_id);
+        game_hud.update_player_board(state);
 
         if(state.game_state == "playing" && !state.game_started) {
-          console.log("Startando jogo");
           dispatchers.started_game();
           start_game();
         }
 
         if (state.game_started) {
-          call_set_turn(state.session_id);
-
-          if(state.turn != state.hero_id) {
-            $('.modal_turn').show();
-          } else {
-            $('.modal_turn').hide();
-          }
+          server.set_turn(state.session_id);
+          game_hud.update_turn_modal(state);
 
           if(state.player_acting) {
-            console.log("ENTRO!!");
             dispatchers.set_player_acting(false);
-            call_action(state.session_id, 'move', state.turn, {
+            server.action(state.session_id, 'move', state.turn, {
               position: "2,2"
             })
           }
         }
-
       }, 1000);
 
 
@@ -329,7 +248,9 @@
         dispatchers.set_session_id($(".session-id").val());
         var email = prompt("What is your email?");
         dispatchers.set_email(email);
-        call_join_game(state.session_id, email);
+        server.join_game(state.session_id, {
+          email: email
+        });
       });
 
       $(".take-slot").bind("click", function() {
