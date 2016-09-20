@@ -1,46 +1,46 @@
 const __ = require('lodash');
 
-var IteratorMethods = function() {
+var Iterator = function() {
 
-  var get = function() {
-
-  }
+  var get = function(path) {
+    console.log(obj, 'get');
+  };
 
   var first = function(){
-
-  }
+    console.log('first');
+  };
 
   var first_key = function(){
-
-  }
+    console.log('first_key');
+  };
 
   var first_value = function(){
-
-  }
+    console.log('first_value');
+  };
 
   var last = function() {
-
-  }
+    console.log('last');
+  };
 
   var last_key = function(){
-
-  }
+    console.log('last_key');
+  };
 
   var last_value = function(){
-
-  }
+    console.log('last_value');
+  };
 
   var keys = function(){
-
-  }
+    console.log('keys');
+  };
 
   var map = function(){
-
-  }
+    console.log('map');
+  };
 
   var occurence = function(){
-
-  }
+    console.log('occurence');
+  };
 
   return {
     get: get,
@@ -57,4 +57,4 @@ var IteratorMethods = function() {
 }
 
 //var IteratorAdapter = AppModel.adapter(new IteratorMethods());
-module.exports = new IteratorMethods();
+module.exports = new Iterator();
