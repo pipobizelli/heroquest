@@ -1,6 +1,6 @@
 const __ = require('lodash');
 
-var Iterator = function() {
+var IteratorAdapter = function() {
 
   var get = function(path) {
     console.log(obj, 'get');
@@ -57,4 +57,4 @@ var Iterator = function() {
 }
 
 //var IteratorAdapter = AppModel.adapter(new IteratorMethods());
-module.exports = Iterator;
+module.exports = IteratorAdapter;

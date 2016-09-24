@@ -1,6 +1,8 @@
-var Iterator = require('./adapters/iterator');
+var IteratorAdapter = require('./adapters/iterator');
+var FirebaseAdapter = require('./adapters/firebase');
 
-module.exports = AppModel = function() {
+var AppModel = function(config) {
+  var adapters_array = config["adapters"] || [];
 
   this.extend = function(model_setup) {
     return new factory_methods(model_setup, {});
@@ -12,19 +14,24 @@ module.exports = AppModel = function() {
     var base_methods = {
       attributes: function() {
         return model_data;
-      },
-      create: function(args) {
-        console.log(123);
-      },
-      find: function(args) {
-
       }
     }
 
-    return Object.assign({}, base_methods, custom_methods);
+    return Object.assign.apply(this, [
+      {},
+      base_methods,
+      custom_methods
+    ].concat(adapters_array));
   }
 
   return {
-    extend: extend
+    extend: this.extend
   }
-}();
+};
+
+module.exports = AppModel({
+  adapters: [
+    new IteratorAdapter(),
+    new FirebaseAdapter()
+  ]
+});
