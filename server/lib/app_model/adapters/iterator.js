@@ -57,4 +57,4 @@ var Iterator = function() {
 }
 
 //var IteratorAdapter = AppModel.adapter(new IteratorMethods());
-module.exports = new Iterator();
+module.exports = Iterator;

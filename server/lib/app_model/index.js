@@ -1,3 +1,5 @@
+var Iterator = require('./adapters/iterator');
+
 module.exports = AppModel = function() {
 
   this.extend = function(model_setup) {
