@@ -1,8 +1,36 @@
-// var Model = Model || [];
-//
-// Model.Session = AppModel.extend({
-//   path: 'session'
-// });
+var AppModel = require('app_model');
+
+var Model = Model || [];
+
+Model.Session = AppModel.extend({
+  firebase_path: 'session',
+  methods: {
+    first_hero: function() {
+      console.log("first_hero");
+    },
+    next_hero: function() {
+      console.log("next_hero");
+    },
+    turn: function() {
+      return {
+        last_played_has_actions: function() {
+          console.log("last_played_has_actions");
+        },
+        last_played: function() {
+          console.log("last_played");
+        },
+        last_round: function() {
+          console.log("last_round");
+        },
+        has_turn: function() {
+          console.log("has_turn");
+        }
+      }
+    }
+  }
+});
+
+module.exports = Model.Session;
 //
 // Model.SetupHeroes = AppModel.extend({
 //   path: 'session.{{id}}._setup.heroes'
