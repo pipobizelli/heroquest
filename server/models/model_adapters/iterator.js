@@ -1,9 +1,13 @@
 const __ = require('lodash');
 
-var Iterator = function() {
+var Iterator = function(obj) {
+
+  var obj = obj || {};
 
   var get = function(path) {
-    console.log(obj, 'get');
+    // console.log(obj, 'get');
+
+    var url = path.split('/');
   };
 
   var first = function(){
@@ -57,4 +61,4 @@ var Iterator = function() {
 }
 
 //var IteratorAdapter = AppModel.adapter(new IteratorMethods());
-module.exports = new Iterator();
+module.exports = new Iterator(obj);
