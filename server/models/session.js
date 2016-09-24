@@ -1,8 +1,12 @@
-// var Model = Model || [];
-//
-// Model.Session = AppModel.extend({
-//   path: 'session'
-// });
+var AppModel = require('app_model');
+
+var Model = Model || [];
+
+Model.Session = AppModel.extend({
+  firebase_path: 'session'
+});
+
+module.exports = Model.Session;
 //
 // Model.SetupHeroes = AppModel.extend({
 //   path: 'session.{{id}}._setup.heroes'
