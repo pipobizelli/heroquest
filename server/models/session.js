@@ -13,21 +13,11 @@ var Session = AppModel.extend({
     next_hero: function() {
       console.log("next_hero" );
     },
-    turn: function() {
-      return {
-        last_played_has_actions: function() {
-          console.log("last_played_has_actions");
-        },
-        last_played: function() {
-          console.log("last_played");
-        },
-        last_round: function() {
-          console.log("last_round");
-        },
-        has_turn: function() {
-          console.log("has_turn");
-        }
-      }
+    active_round: function() {
+      console.log('active round');
+    },
+    active_hero: function() {
+      console.log('active hero');
     }
   }
 });
