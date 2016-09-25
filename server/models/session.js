@@ -1,15 +1,17 @@
+var colors = require('colors');
 var AppModel = require('app_model');
 
-var Model = Model || [];
+var Session = AppModel.extend({
+  path: 'sessions',
+  attributes: {
 
-Model.Session = AppModel.extend({
-  firebase_path: 'session',
+  },
   methods: {
     first_hero: function() {
       console.log("first_hero");
     },
     next_hero: function() {
-      console.log("next_hero");
+      console.log("next_hero" );
     },
     turn: function() {
       return {
@@ -30,7 +32,20 @@ Model.Session = AppModel.extend({
   }
 });
 
-module.exports = Model.Session;
+module.exports = Session;
+
+
+
+// console.log("================================".green)
+// console.log("UNIT TESTS".green);
+// console.log("================================".green)
+//
+// console.log("1. Method find must exists".cyan)
+// console.log(typeof(Session.find) == "function");
+//
+// console.log("2. Method find must know about path defined in model".cyan)
+// console.log(Session.find() == "sessions");
+// console.log("================================".green)
 //
 // Model.SetupHeroes = AppModel.extend({
 //   path: 'session.{{id}}._setup.heroes'

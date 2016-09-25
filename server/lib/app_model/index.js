@@ -2,13 +2,36 @@ var IteratorAdapter = require('./adapters/iterator');
 var FirebaseAdapter = require('./adapters/firebase');
 
 var AppModel = function(config) {
-  var adapters_array = config["adapters"] || [];
 
-  this.extend = function(model_setup) {
-    return new factory_methods(model_setup, {});
+  this.initialize = function(config) {
+    this.instance_adapters_array = config["instance_adapters"] || [];
+    this.static_adapters_array = config["static_adapters"] || [];
   }
 
-  this.factory_methods = function(model_setup, model_data) {
+  this.static_methods = function(config) {
+    var base_methods = {
+      extend: this.extend,
+      get_model_setup: this.get_model_setup
+    }
+
+    return Object.assign.apply(this, [
+      {},
+      base_methods
+    ].concat(this.static_adapters_array));
+  }
+
+  this.extend = function(model_setup) {
+    return function(model_setup) {
+      this.model_setup = model_setup;
+      return static_methods(config);
+    }(model_setup);
+  }
+
+  this.get_model_setup = function() {
+    return model_setup;
+  }
+
+  this.instance_methods = function(model_setup, model_data) {
     var custom_methods = model_setup["methods"];
 
     var base_methods = {
@@ -21,8 +44,10 @@ var AppModel = function(config) {
       {},
       base_methods,
       custom_methods
-    ].concat(adapters_array));
+    ].concat(this.instance_adapters_array));
   }
+
+  this.initialize(config);
 
   return {
     extend: this.extend
@@ -30,8 +55,10 @@ var AppModel = function(config) {
 };
 
 module.exports = AppModel({
-  adapters: [
-    new IteratorAdapter(),
+  instance_adapters: [
+    new IteratorAdapter()
+  ],
+  static_adapters: [
     new FirebaseAdapter()
   ]
 });

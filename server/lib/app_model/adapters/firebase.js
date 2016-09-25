@@ -2,32 +2,41 @@ const __ = require('lodash');
 
 var FirebaseAdapter = function() {
 
-  this.create = function() {
+  var _get_path = function() {
+    return get_model_setup().path;
+  }
+
+  var _new = function() {
+    console.log('new');
+  }
+
+  var _create = function() {
     console.log('create');
   };
 
-  this.find = function(){
-    console.log('find');
+  var _find = function(){
+    return get_path();
   };
 
-  this.update = function(){
+  var _update = function(){
     console.log('update');
   };
 
-  this.delete = function(){
+  var _delete = function(){
     console.log('delete');
   };
 
-  this.count = function() {
+  var _count = function() {
     console.log('count');
   }
 
   return {
-    create:this.create,
-    find:this.find,
-    update:this.update,
-    delete:this.delete,
-    count:this.count
+    create:_create,
+    find:_find,
+    update:_update,
+    delete:_delete,
+    count:_count,
+    new:_new
   }
 }
 
