@@ -1,60 +1,71 @@
 const __ = require('lodash');
 
-var IteratorAdapter = function() {
+var Iterator = function(obj) {
 
-  var get = function(path) {
-    console.log(obj, 'get');
+  this.obj = obj || {};
+
+  this.get = function(path) {
+    var url = path.split('/'),
+        node;
+
+    url.forEach(function(v, k){
+      node = node[v] || this.obj[v];
+    });
+
+    console.log(node);
+    //return node;
   };
 
-  var first = function(){
+  this.first = function(){
     console.log('first');
   };
 
-  var first_key = function(){
+  this.first_key = function(){
     console.log('first_key');
   };
 
-  var first_value = function(){
+  this.first_value = function(){
     console.log('first_value');
   };
 
-  var last = function() {
+  this.last = function() {
     console.log('last');
   };
 
-  var last_key = function(){
+  this.last_key = function(){
     console.log('last_key');
   };
 
-  var last_value = function(){
+  this.last_value = function(){
     console.log('last_value');
   };
 
-  var keys = function(){
+  this.keys = function(){
     console.log('keys');
   };
 
-  var map = function(){
+  this.map = function(){
     console.log('map');
   };
 
-  var occurence = function(){
+  this.occurence = function(){
     console.log('occurence');
   };
 
   return {
-    get: get,
-    first: first,
-    first_key: first_key,
-    first_value: first_value,
-    last: last,
-    last_key: last_key,
-    last_value: last_value,
-    keys: keys,
-    map: map,
-    occurence: occurence
+    get: this.get,
+    first: this.first,
+    first_key: this.first_key,
+    first_value: this.first_value,
+    last: this.last,
+    last_key: this.last_key,
+    last_value: this.last_value,
+    keys: this.keys,
+    map: this.map,
+    occurence: this.occurence
   }
 }
 
 //var IteratorAdapter = AppModel.adapter(new IteratorMethods());
-module.exports = IteratorAdapter;
+module.exports = new Iterator(obj);
+
