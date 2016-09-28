@@ -2,9 +2,10 @@ const __ = require('lodash');
 
 var Iterator = function(obj) {
 
-  var obj = obj || {};
+  var _obj = obj || {},
+      self = this;
 
-  var get = function(path) {
+  var _get = function(path) {
     var url = path.split('/'),
         node = {};
 
@@ -12,56 +13,76 @@ var Iterator = function(obj) {
       node = node[v] || obj[v];
     });
 
-    return node;
+    _obj = node;
+    return new Iterator(_obj);
   };
 
-  var first = function(){
+  var _first = function(){
     console.log('first');
   };
 
-  var first_key = function(){
+  var _first_key = function(){
     console.log('first_key');
   };
 
-  var first_value = function(){
+  var _first_value = function(){
     console.log('first_value');
   };
 
-  var last = function() {
+  var _last = function() {
     console.log('last');
   };
 
-  var last_key = function(){
+  var _last_key = function(){
     console.log('last_key');
   };
 
-  var last_value = function(){
-    console.log('last_value');
+  var _last_value = function(){
+    var length = __.values(_obj).length-1,
+        last = __.values(_obj)[length];
+      
+    _obj = last;
+    execute();
+    
+    return this;
   };
 
-  var keys = function(){
+  var _keys = function(){
     console.log('keys');
   };
 
-  var map = function(){
-    console.log('map');
+  var _map = function(index){
+    var arr = __.map(_obj, function(obj) {
+      return obj[index];
+    });
+
+    return arr;
   };
 
-  var occurence = function(){
+  var _occurence = function(){
     console.log('occurence');
   };
 
+  var handler;
+
+  var execute = function(){
+    clearTimeout(handler);
+    handler = setTimeout(function(){ 
+      return _obj;
+    }, 500);
+  };
+
   return {
-    get: get,
-    first: first,
-    first_key: first_key,
-    first_value: first_value,
-    last: last,
-    last_key: last_key,
-    last_value: last_value,
-    keys: keys,
-    map: map,
-    occurence: occurence
+    get: _get,
+    first: _first,
+    first_key: _first_key,
+    first_value: _first_value,
+    last: _last,
+    last_key: _last_key,
+    last_value: _last_value,
+    keys: _keys,
+    map: _map,
+    occurence: _occurence
   }
 }
 
