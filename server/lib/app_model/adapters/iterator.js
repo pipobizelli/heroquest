@@ -2,7 +2,8 @@ const __ = require('lodash');
 
 var Iterator = function(obj) {
 
-  var _obj = obj || {};
+  var _obj = obj || {},
+      _origin = obj || {};
 
   var _get = function(path) {
     var url = path.split('/'),
@@ -17,23 +18,43 @@ var Iterator = function(obj) {
   };
 
   var _first = function(){
-    console.log('first');
+    var k = __.keys(_obj)[0]
+        o = {};
+    
+    o[k] = _obj[k];
+    
+    _obj = o;
+    return this;
   };
 
   var _first_key = function(){
-    console.log('first_key');
+    return __.keys(_obj)[0];
   };
 
   var _first_value = function(){
-    console.log('first_value');
+    var first = __.values(_obj)[0];
+      
+    _obj = first;
+    return this;
   };
 
   var _last = function() {
-    console.log('last');
+    var keys = __.keys(_obj),
+        i = keys.length-1,
+        k = __.keys(_obj)[i],
+        o = {};
+    
+    o[k] = _obj[k];
+
+    _obj = o;
+    return this;
   };
 
   var _last_key = function(){
-    console.log('last_key');
+    var keys = __.keys(_obj),
+        end = keys.length-1;
+
+    return keys[end];
   };
 
   var _last_value = function(){
@@ -45,7 +66,10 @@ var Iterator = function(obj) {
   };
 
   var _keys = function(){
-    console.log('keys');
+    var keys = __.keys(_obj);
+      
+    _obj = keys;
+    return this;
   };
 
   var _map = function(index){
@@ -57,12 +81,22 @@ var Iterator = function(obj) {
     return this;
   };
 
+  var _is_empty = function(){
+    return __.isEmpty(_obj);
+  };
+
   var _occurence = function(){
     console.log('occurence');
   };
 
   /* END of methods chain */
   var _val = function(){
+    if(_obj !== _origin) {
+      var act = _obj;
+      _obj = _origin;
+      return act;
+    }
+
     return _obj;
   };
 
@@ -76,6 +110,7 @@ var Iterator = function(obj) {
     last_value: _last_value,
     keys: _keys,
     map: _map,
+    is_empty: _is_empty,
     occurence: _occurence,
     val: _val
   }
