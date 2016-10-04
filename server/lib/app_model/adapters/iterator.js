@@ -2,8 +2,7 @@ const __ = require('lodash');
 
 var Iterator = function(obj) {
 
-  var _obj = obj || {},
-      self = this;
+  var _obj = obj || {};
 
   var _get = function(path) {
     var url = path.split('/'),
@@ -42,8 +41,6 @@ var Iterator = function(obj) {
         last = __.values(_obj)[length];
       
     _obj = last;
-    execute();
-    
     return this;
   };
 
@@ -56,20 +53,17 @@ var Iterator = function(obj) {
       return obj[index];
     });
 
-    return arr;
+    _obj = arr;
+    return this;
   };
 
   var _occurence = function(){
     console.log('occurence');
   };
 
-  var handler;
-
-  var execute = function(){
-    clearTimeout(handler);
-    handler = setTimeout(function(){ 
-      return _obj;
-    }, 500);
+  /* END of methods chain */
+  var _val = function(){
+    return _obj;
   };
 
   return {
@@ -82,9 +76,9 @@ var Iterator = function(obj) {
     last_value: _last_value,
     keys: _keys,
     map: _map,
-    occurence: _occurence
+    occurence: _occurence,
+    val: _val
   }
 }
 
-//var IteratorAdapter = AppModel.adapter(new IteratorMethods());
 module.exports = Iterator;
